@@ -46,8 +46,8 @@
   \item{getIC}{\code{signature(x = "matrix", p = "numeric")} Calculate
     information content profile for matrix. p is the background frequency}
 
-  \item{matrixReverseComplement}{\code{signature(x = "pfm")} get the 
-  	reverse complement of position frequency matrix.}
+  \item{matrixReverseComplement}{\code{signature(x = "pfm")} change the 
+  	position frequency matrix into reverse complement.}
   	
   \item{plot}{\code{signature(x = "pfm")} Plots the
     sequence logo of the position frequency matrix. }

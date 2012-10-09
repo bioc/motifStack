@@ -18,6 +18,7 @@ UngappedAlignment<-function(pfms, i, threshold){
     res<-getAlignedICWithoutGap(pfms[[i-1]], pfms[[i]], threshold)
     if(res$rev){
         pfms[[i]]<-matrixReverseComplement(pfms[[i]])
+		pfms[[i]]@name<-paste(pfms[[i]]@name, "(RC)", sep="")
     }
     if(res$offset>0){
         pfms[[i]]<-addBlank(pfms[[i]], res$offset, FALSE)

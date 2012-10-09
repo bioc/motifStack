@@ -1,3 +1,17 @@
+CHANGES IN VERSION 1.0.1
+-----------------------
+
+NEW FEATURES
+
+    o No changes classified as 'new features' (package under active
+    development)
+
+BUG FIXES
+
+    o Append "(RC)" to the name slot of the pfm when DNAmotifAlignment 
+    using reverse-complement motif for alignment.
+
+
 CHANGES IN VERSION 1.0.0
 -----------------------
 
