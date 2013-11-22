@@ -377,7 +377,7 @@ angle=360, pfmNameSpliter=";", rcpostfix="(RC)", motifScale=c("linear","logarith
 	nodes.car <- gsub("[_]", " ", labels.nodes)
 	opar <- par(mar = par("mar"), srt = par("srt"))
 	on.exit(par(opar))
-	par(mar = c(0.1, 0.1, 0.1, 0.1))
+	par(mar = c(0.1, 0.1, 0.1, 0.1), mfrow=c(1, 1))
 	dis <- phylog$droot
 	dis <- dis/max(dis)
 	rayon <- circle
@@ -475,8 +475,8 @@ angle=360, pfmNameSpliter=";", rcpostfix="(RC)", motifScale=c("linear","logarith
 			for(i in 1:length(pfmNames)){
 				pfmname <- unlist(strsplit(pfmNames[[i]], pfmNameSpliter))
                 pfmname <- gsub(paste(rcpostfix,"$",sep=""),"",pfmname)
-				pfmIdx <- which(labels.leaves %in% pfmname)
-                if(length(pfmIdx)==0) pfmIdx <- which(names(phylog$leaves) %in% pfmname)
+				pfmIdx <- which(makeLeaveNames(labels.leaves) %in% makeLeaveNames(pfmname))
+                if(length(pfmIdx)==0) pfmIdx <- which(makeLeaveNames(names(phylog$leaves)) %in% makeLeaveNames(pfmname))
 				if(length(pfmIdx)>0){
 					vph <- ifelse(motifScale=="linear",
                                     vpheight*length(pfmname),
