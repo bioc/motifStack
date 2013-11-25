@@ -1,16 +1,17 @@
 readPCM <- function(path=".", pattern=NULL){
     pcms <- dir(path,pattern)
     pcml <- lapply(pcms, function(.ele){
-                 data <- read.table(file.path(path, basename(.ele)))
-                 classes <- sapply(data, class)
-                 data <- data[, classes %in% c("integer", "numeric")]
-                 rownames(data) <- c("A", "C", "G", "T")
-                 data
-                 })
+        data <- read.table(file.path(path, basename(.ele)))
+        classes <- sapply(data, class)
+        data <- data[, classes %in% c("integer", "numeric")]
+        rownames(data) <- c("A", "C", "G", "T")
+        data
+    })
     names(pcml) <- basename(pcms)
     pcm <- mapply(function(.d, .n){
-       new("pcm", mat=as.matrix(.d), name=.n) 
+        new("pcm", mat=as.matrix(.d), name=gsub("\\.", "_", make.names(.n))) 
     }, pcml, names(pcml))
+    names(pcm) <- gsub("\\.", "_", make.names(names(pcm)))
     pcm
 }
 
