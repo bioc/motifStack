@@ -67,7 +67,7 @@ plot(motif, font="mono,Courier")
 #try a different font and a different color group
 motif@color <- colorset(colorScheme='basepairing')
 plot(motif,font="Times")
-par<-opar
+par(opar)
 @
 \incfig{motifStack-DNAseqLogo}{0.6\textwidth}{DNA sequence logo.}
 {Plot a DNA sequence logo with different fonts and colors.}
