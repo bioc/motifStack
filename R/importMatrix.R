@@ -394,7 +394,7 @@ importM_meme <- function(fns){
     if(length(tfNames)!=length(mat_frs)){
       stop("Can not convert the MEME file.", fn)
     }
-    mat_frs_end <- c((mat_frs - 1)[-1], length(lines))
+    mat_frs_end <- c((mat_frs - 2)[-1], length(lines))
     motifs <- mapply(mat_frs, mat_frs_end, FUN=function(mat_fr, mat_fr_end){
       mat.info <- lines[mat_fr]
       alength <- sub("^.*?alength=\\s*(\\d+)[^0-9]*.*$", "\\1", mat.info)
@@ -410,6 +410,7 @@ importM_meme <- function(fns){
         ## remove empty lines
         mat.lines <- mat.lines[!grepl('^\\s+$', mat.lines)]
         ## remove the lines not start with number
+        mat.lines <- sub("^\\s+", "", mat.lines)
         mat.lines <- mat.lines[grepl('^\\d+', mat.lines)]
         w <- length(mat.lines)
       }
