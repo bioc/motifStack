@@ -1,3 +1,8 @@
+CHANGES IN VERSION 1.49.1
+-----------------------
+
+  o Fix the issue for importMatrix when 'w' is missing.
+  
 CHANGES IN VERSION 1.47.1
 -----------------------
 

@@ -390,30 +390,42 @@ importM_meme <- function(fns){
                       })
     
     tfNames <- sub("^MOTIF\\s+", "", lines[grepl("^MOTIF\\s+", lines)])
-    mat.frs <- which(grepl("^letter-probability matrix", lines))
-    if(length(tfNames)!=length(mat.frs)){
+    mat_frs <- which(grepl("^letter-probability matrix", lines))
+    if(length(tfNames)!=length(mat_frs)){
       stop("Can not convert the MEME file.", fn)
     }
-    motifs <- lapply(mat.frs, function(mat.fr){
-      mat.info <- lines[mat.fr]
-      alength <- sub("^.*?alength=\\s*(\\d+)\\s*w=.*$", "\\1", mat.info)
-      w <- sub("^.*?w=\\s*(\\d+)\\s.*$", "\\1", mat.info)
-      mat.lines <- lines[(mat.fr+1):(mat.fr+as.numeric(w))]
-      mat <- matrix(scan(text=mat.lines, what = double(), quiet=TRUE), ncol = as.numeric(alength), byrow=TRUE)
-      mat <- t(mat)
-      if(length(letters)!=nrow(mat)){
-        stop("alength is not as same as length of letters")
+    mat_frs_end <- c((mat_frs - 1)[-1], length(lines))
+    motifs <- mapply(mat_frs, mat_frs_end, FUN=function(mat_fr, mat_fr_end){
+      mat.info <- lines[mat_fr]
+      alength <- sub("^.*?alength=\\s*(\\d+)[^0-9]*.*$", "\\1", mat.info)
+      if(length(letters)!=as.numeric(alength)){
+        warning("alength is not as same as length of letters")
+        alength <- length(letters)
       }
+      if(grepl('w=', mat.info)){
+        w <- sub("^.*?w=\\s*(\\d+)\\s.*$", "\\1", mat.info)
+        mat.lines <- lines[(mat_fr+1):(mat_fr+as.numeric(w))]
+      }else{
+        mat.lines <- lines[(mat_fr+1):mat_fr_end]
+        ## remove empty lines
+        mat.lines <- mat.lines[!grepl('^\\s+$', mat.lines)]
+        ## remove the lines not start with number
+        mat.lines <- mat.lines[grepl('^\\d+', mat.lines)]
+        w <- length(mat.lines)
+      }
+      mat <- matrix(scan(text=mat.lines, what = double(), quiet=TRUE),
+                    ncol = as.numeric(alength), byrow=TRUE)
+      mat <- t(mat)
       rownames(mat) <- letters
       mat
-    })
+    }, SIMPLIFY = FALSE)
     names(motifs) <- make.names(tfNames, unique = TRUE, allow_ = TRUE)
     
     ## background
     background <- NA
     if(any(grepl("^Background\\s+letter\\s+frequencies", lines))){
       bcklines.fr <- which(grepl("^Background\\s+letter\\s+frequencies", lines))+1
-      if(length(bcklines.fr)!=length(mat.frs)){
+      if(length(bcklines.fr)!=length(mat_frs)){
         if(length(bcklines.fr)==1){
           bcklines <- lines[bcklines.fr:(length(lines))]
           bcklines.keep <- which(grepl("^[a-zA-Z]\\s+[0-9\\.]+", bcklines))
@@ -439,8 +451,8 @@ importM_meme <- function(fns){
           stop("Not all the matrix have background")
         }
       }else{
-        background <- mapply(function(bckline.fr, mat.fr){
-          bcklines <- lines[bckline.fr:mat.fr]
+        background <- mapply(function(bckline.fr, mat_fr){
+          bcklines <- lines[bckline.fr:mat_fr]
           bcklines.keep <- which(grepl("^[a-zA-Z]\\s+[0-9\\.]+", bcklines))
           bcklines.keep.diff <- diff(c(0, bcklines.keep))
           bcklines.keep.to <- which(bcklines.keep.diff!=1)
@@ -461,7 +473,7 @@ importM_meme <- function(fns){
             bck <- NULL
           }
           bck
-        }, bcklines.fr, mat.frs, SIMPLIFY = FALSE)
+        }, bcklines.fr, mat_frs, SIMPLIFY = FALSE)
         mapply(function(mat, tfName, thisBck) {
           if(length(thisBck)>0){
             new("pfm", mat=mat, name=tfName, alphabet=alphabet, background=thisBck)

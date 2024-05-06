@@ -182,6 +182,7 @@ test_importMatrix<-function(){
   ## meme
   importMatrix(file.path(path, "dna.meme"))
   importMatrix(file.path(path, "momo.txt"), format = "meme")
+  importMatrix(file.path(path, 'rna.meme'))
   ## pcm
   importMatrix(dir(path, "*.pcm", full.names = TRUE))
   ## pfm

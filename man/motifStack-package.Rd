@@ -3,7 +3,6 @@
 \docType{package}
 \name{motifStack-package}
 \alias{motifStack-package}
-\alias{_PACKAGE}
 \title{Plot stacked logos for single or multiple DNA, RNA and amino acid sequence}
 \description{
 motifStack is a package that is able to draw amino acid sequence as easy as
